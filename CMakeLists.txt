@@ -162,6 +162,9 @@ add_library(xtensor INTERFACE)
 target_include_directories(xtensor INTERFACE $<BUILD_INTERFACE:${XTENSOR_INCLUDE_DIR}>
                                              $<INSTALL_INTERFACE:include>)
 target_link_libraries(xtensor INTERFACE xtl)
+set_target_properties(xtensor
+    PROPERTIES
+    PUBLIC_HEADER "${XTENSOR_HEADERS}")
 
 OPTION(XTENSOR_ENABLE_ASSERT "xtensor bound check" OFF)
 OPTION(XTENSOR_CHECK_DIMENSION "xtensor dimension check" OFF)
@@ -213,14 +216,12 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 install(TARGETS xtensor
-        EXPORT ${PROJECT_NAME}-targets)
+        EXPORT ${PROJECT_NAME}-targets
+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
 
 # Makes the project importable from the build directory
 export(EXPORT ${PROJECT_NAME}-targets
        FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake")
-
-install(FILES ${XTENSOR_HEADERS}
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/xtensor)
 
 set(XTENSOR_CMAKECONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}" CACHE
     STRING "install path for xtensorConfig.cmake")
